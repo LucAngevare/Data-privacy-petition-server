@@ -1,0 +1,54 @@
+table {
+  font-family: 'Product Sans';
+  border-collapse: collapse;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+a:visited {
+  color: #326ac7;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+input[type=text] {
+  font-family: 'Product Sans';
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+  width: 85%;
+}
+
+input[type=submit] {
+  width: calc(5% - 8px);
+  padding: 8px;
+  font-family: 'Product Sans';
+}
+
+form {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  text-align: center;
+}
+
+.code-output {
+  position: absolute;
+  margin-top: 460px;
+  margin-left: 90px;
+  background-color: black;
+  border-radius: 5px;
+  color: #39FF14;
+  width: 85%;
+  padding: 15px 0 15px 5px;
+  font-family: 'Courier New', monospace;
+}

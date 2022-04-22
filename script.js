@@ -21,6 +21,18 @@ function errorHandler() {
   }, 5000);
 }
 
+function historyBackWFallback() {
+    const prevPage = window.location.href;
+
+    window.history.go(-1);
+
+    setTimeout(function(){ 
+        if (window.location.href == prevPage) {
+            window.location.href = "https://weerstand.lucangevare.nl";
+        }
+    }, 500);
+}
+
 function changeTitle(message) {
   document.title = "Error - Petitie";
   var existFunc = setInterval(function() {
@@ -44,11 +56,14 @@ function acceptCookies() {
   document.body.style.opacity = 1;
   document.body.style.backgroundColor = "transparent";
   window.localStorage.setItem("cookieconsent", true);
+  var date = new Date();
+  date.setTime(date.getTime()+365*24*60*60*1000);
+  document.cookie += `;cookieconsent=TRUE;expires=${date.toUTCString()};path=/`; //See https://www.quirksmode.org/js/cookies.html for how annoying document.cookies work; I will continue to use it for this purpose though, so if for some reason window.localStorage doesn't work, I always have a fallback method
   document.getElementById("cookieModal").remove();
 }
 
 window.addEventListener("load", function() {
-  if (document.cookie.length || window.localStorage.length) {
+  if (!Boolean(document.cookie.split(";").length) || Boolean(window.localStorage.length)) { //Because obviously PHPSESSID exists
     document.getElementById("cookieModal").remove();
   }
 })

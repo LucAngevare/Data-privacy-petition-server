@@ -21,7 +21,8 @@ if (isset($_COOKIE["signed"])) {echo "<script>changeTitle('Duplicate entry')</sc
       }
       echo $_SESSION['captcha_code'];
     }
-    $conn = new mysqli("remotemysql.com", "oBQslgIbMv", base64_decode("SHM0M0RqMlE4eg=="), "oBQslgIbMv");
+
+    $conn = new mysqli("remotemysql.com", getenv('username'), getenv('password'), getenv('username'));
     if ($conn->connect_error) {
       echo "<h1>Er is iets foutgegaan... Probeer het alstublieft opnieuw!</h1>
       <p>U wordt in 5 seconden teruggestuurd.</p>
@@ -33,6 +34,7 @@ if (isset($_COOKIE["signed"])) {echo "<script>changeTitle('Duplicate entry')</sc
     }
 
     if (count($_POST) === 0) echo "<script>changeTitle('Geen gegevens ingevuld')</script>"; //Because why the heck would PHP have any syntax available to redirect a user
+    if (!(bool)preg_match('/^\S+@\S+\.\S+$/i', $_POST["Email"])) echo "<script>changeTitle('Het e-mail-adres is niet valide')</script>";
 
     $keys = array();
     $values = array();
@@ -44,10 +46,8 @@ if (isset($_COOKIE["signed"])) {echo "<script>changeTitle('Duplicate entry')</sc
       $data .= $key .": ". $value ."<br/>";
       $keys[$index] = str_replace("_", " ", $key);
       $values[$index] = "'". $value ."'";
-      if ($key === "Birth") { //Because of course there's no one-line if loops in PHP like conditional branches and the question mark operator in JavaScript or any other good language goddammit
-        $values[$index] = date_format(date_create($value), 'Ymd'); // PHP is so unbelievably dumb that even within a string, using a minus symbol or backslash for date formats, it decides to just subtract or divide instead of using string interpolation... oh my god
+      if ($key === "Birth") $values[$index] = date_format(date_create($value), 'Ymd'); // PHP is so unbelievably dumb that even within a string, using a minus symbol or backslash for date formats, it decides to just subtract or divide instead of using string interpolation... oh my god
         // attempt to overwrite by using the same index in the array, see how well PHP handles that
-      }
       $index++;
     }
     if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
@@ -59,6 +59,7 @@ if (isset($_COOKIE["signed"])) {echo "<script>changeTitle('Duplicate entry')</sc
     }
     array_push($keys, 'IP');
     array_push($values, "\"".$ip."\"");
+    echo "INSERT INTO registrations(". implode(", ", $keys) .") VALUES (". implode(", ", $values) .");";
 
     if ($conn->query("INSERT INTO registrations(". implode(", ", $keys) .") VALUES (". implode(", ", $values) .");") !== TRUE) { //This is so unbelievably insecure I hate PHP so much, the only injection prevention they sort of had became deprecated in v5.5
       echo "<script>changeTitle(\"".$conn->error."\")</script>";
