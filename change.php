@@ -4,6 +4,7 @@
 $conn = new mysqli("remotemysql.com", getenv('username'), getenv('password'), getenv('username'));
 
 $res = mysqli_query($conn, "SELECT 1 FROM users WHERE user=\"".preg_replace('/[^A-Za-z0-9\-]/', '', $_GET["username"])."\" AND password=\"".md5($_GET["password"])."\";");
+// Again check to see whether the username and password correspond to an entry for a user
 
 if (!(mysqli_fetch_all($res)[0][0]==1)) {
   header("Location: https://petitie.lucangevare.nl/");
@@ -11,8 +12,8 @@ if (!(mysqli_fetch_all($res)[0][0]==1)) {
 }
 
 if (isset($_POST["Save"])) {
-  mysqli_query($conn, "UPDATE registrations SET Name='".$_POST['Name']."', Birth='".$_POST['Birth']."', Email='".$_POST['Email']."', Street='".$_POST['Street']."', Address='".$_POST['Address']."', Zipcode='".$_POST['Zipcode']."', City='".$_POST['City']."', Country='".$_POST['Country']."', IP='".$_POST['IP']."' WHERE IP='".$_GET["ip"]."';");
-  echo "<script>window.location = '/admin.php?username=".$_GET["username"]."&password=".$_GET["password"]."'</script>";
+  mysqli_query($conn, "UPDATE registrations SET Name='".$_POST['Name']."', Birth='".$_POST['Birth']."', Email='".$_POST['Email']."', Street='".$_POST['Street']."', Address='".$_POST['Address']."', Zipcode='".$_POST['Zipcode']."', City='".$_POST['City']."', Country='".$_POST['Country']."', IP='".$_POST['IP']."' WHERE IP='".$_GET["ip"]."';"); // Update query, updating all values whether they're actually changed or not because checking that only takes more time
+  echo "<script>window.location = '/admin.php?username=".$_GET["username"]."&password=".$_GET["password"]."'</script>"; // Redirect back to the original page
 }
 
 $row = mysqli_query($conn, "SELECT * FROM registrations WHERE IP='".$_GET["ip"]."';");

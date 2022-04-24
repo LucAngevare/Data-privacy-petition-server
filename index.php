@@ -10,3 +10,5 @@ if ($requestedpage === "/") {
   include "404.php";
   exit;
 }
+
+// Serve people depending on the requested page

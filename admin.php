@@ -14,8 +14,10 @@ if (!(count($_POST)==0)) {
   $res = mysqli_query($conn, $_POST["SQL_Query"]);
   if ($res instanceof mysqli_result) {
     echo "<p class='code-output'>>>> ".mysqli_fetch_all($res)[0][0]."</p>";
+    // if the result is part of a MySQLi object, strip it down to an array
   } else {
     echo "<p class='code-output'>>>> ".(string)$res."</p>";
+    //if it's a number, boolean, etc. just cast it to a string and put it into a string, meaning the casting should already happen implicitly but I'm a C++ programmer.
   }
 }
 ?>
@@ -28,9 +30,6 @@ if (!(count($_POST)==0)) {
   <body>
     <h1>Admin stuff en dingen I suppose</h1>
     <?php
-//well I guess this kinda like... exists
-  $conn = new mysqli("remotemysql.com", "oBQslgIbMv", base64_decode("YzUwR1VoNU1qTQ=="), "oBQslgIbMv");
-
   $res = mysqli_query($conn, "SELECT * FROM registrations");
   if (mysqli_num_rows($res) > 0) {
     echo "<table>";
@@ -41,12 +40,12 @@ if (!(count($_POST)==0)) {
     echo "</table>";
   }
 
-  $graph_x_values_res = mysqli_query($conn, "SELECT SUBSTRING(SignDate,1,10), COUNT(*) FROM registrations GROUP BY SUBSTRING(SignDate,1,10);");
+  $graph_x_values_res = mysqli_query($conn, "SELECT SUBSTRING(SignDate,1,10), COUNT(*) FROM registrations GROUP BY SUBSTRING(SignDate,1,10);"); // Get object of amount of occurences of only first 10 characters of the date, so the hour, minute or second of signage don't matter, but only the day, month and year does.
   $arraypoints = array(
     array("Datum", "Gezette handtekeningen")
   );
   while($r = mysqli_fetch_array($graph_x_values_res, MYSQLI_ASSOC)) {
-    $arraypoints[] = array($r["SUBSTRING(SignDate,1,10)"], (int)$r["COUNT(*)"]);
+    $arraypoints[] = array($r["SUBSTRING(SignDate,1,10)"], (int)$r["COUNT(*)"]); // add new value to the array with the date and the amount of signatures
   }
   
   mysqli_close($conn);

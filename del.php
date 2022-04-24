@@ -10,4 +10,4 @@ if (!(mysqli_fetch_all($res)[0][0]==1)) {
 
 mysqli_query($conn, "DELETE FROM registrations WHERE IP='".$_GET['ip']."';");
 
-header("location:admin.php?username=".$_GET["username"]."&password=".$_GET["password"]);
+header("location:admin.php?username=".$_GET["username"]."&password=".$_GET["password"]); //set the header to redirect the user as nothing has been written to the page and none of the headers have been updated

@@ -22,7 +22,7 @@
           echo "<h1>Something went wrong... Please try again!</h1>";
         }
         if ($result = $conn->query("SELECT * FROM registrations")) {
-          $rowcount = mysqli_num_rows($result);
+          $rowcount = mysqli_num_rows($result); // get number of rows
         }
         $conn->close();
         ?>
@@ -48,7 +48,7 @@
             <div class="signature">
                 <div class="parent-counter"><span class="counter">
                 <?php
-                echo number_format((int)$rowcount, 0, ',', '.');
+                echo number_format((int)$rowcount, 0, ',', '.'); // format so it's humanly readable
                 ?>
                 </span>&nbsp;keer ondertekend</div>
                 <p class="burgerinitiatief-tekst">
